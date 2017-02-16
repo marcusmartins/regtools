@@ -1,0 +1,5 @@
+library/ubuntu:16.04
+library/ubuntu:14.04
+library/alpine:latest
+library/java:latest
+library/java:8-jre-alpine
