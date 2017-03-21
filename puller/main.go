@@ -11,14 +11,16 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/sethgrid/pester"
 )
 
 var (
 	garant     = "auth.docker.io"
 	registry   = "registry-1.docker.io"
-	httpClient = http.Client{
+	httpClient = pester.NewExtendedClient(&http.Client{
 		Timeout: time.Duration(30 * time.Second),
-	}
+	})
 )
 
 type token struct {
@@ -164,6 +166,12 @@ func pull(image string) {
 		log.Printf("Unable to retrieve manifest: %s", err)
 	}
 
+}
+
+func init() {
+	httpClient.Concurrency = 10
+	httpClient.MaxRetries = 5
+	httpClient.Backoff = pester.ExponentialBackoff
 }
 
 func main() {
